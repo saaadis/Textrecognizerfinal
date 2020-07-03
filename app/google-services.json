@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "540688324234",
+    "firebase_url": "https://textextraction-2324d.firebaseio.com",
+    "project_id": "textextraction-2324d",
+    "storage_bucket": "textextraction-2324d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540688324234:android:90ab682ed628e2c0e4bf73",
+        "android_client_info": {
+          "package_name": "com.example.textrecognizer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "540688324234-snqd1e0dqh0jummhq99rn1u7qa1g54tm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.textrecognizer",
+            "certificate_hash": "f4ca5d7a50008568ae62d8c01dc2fedbfad769da"
+          }
+        },
+        {
+          "client_id": "540688324234-idu7ofk4k12ok6v4hn2uft0am5b3tkfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoWZbYWlO7mRxin4ZJVU-GVaoq8aytBPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540688324234-idu7ofk4k12ok6v4hn2uft0am5b3tkfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

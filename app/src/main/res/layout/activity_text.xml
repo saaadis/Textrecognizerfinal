@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center_horizontal">
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+
+        android:background="@drawable/round_button"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:onClick="SaveText"
+        android:src="@drawable/save" />
+
+    <ImageButton
+        android:id="@+id/anothersnipButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@drawable/round_button"
+        android:onClick="TakeAnother"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/another" />
+</LinearLayout>
+
+    <EditText
+        android:id="@+id/fileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ENTER FILENAME HERE!"
+        android:background="@android:color/transparent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:text="RESULT  "/>
+
+<EditText
+android:id="@+id/textView"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Detected text will appear here."
+android:background="@android:color/transparent"
+android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+</LinearLayout>

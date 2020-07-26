@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -17,11 +16,11 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.graphics.get
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
@@ -30,9 +29,9 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextDetector
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 import kotlinx.android.synthetic.main.activity_main.imageview as imageview1
 
@@ -43,22 +42,26 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE = 100
     // private val REQUEST_GALLERY_CAMERA = 54654
     //internal var imagePath: String? = ""
-    private lateinit var imageBitmap: Bitmap
-    lateinit var editText: EditText
+   lateinit var imageBitmap: Bitmap
+  // lateinit var editText: EditText
     lateinit var text_Button: ImageButton
    // var imageUri = ""
     private val PERMISSION_REQUEST_CODE: Int = 101
+    var text: String = ""
 
-    private var mCurrentPhotoPath: String? = null
+    private lateinit var mCurrentPhotoPath: String
+    private var REQ_CODE : Int = 1234
+    var  count:Int=0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        editText = findViewById(R.id.textView)
+        //editText = findViewById(R.id.textView)
         text_Button = findViewById(R.id.textButton)
-
-        editText.visibility = View.INVISIBLE
+        text_Button.isEnabled=false
+      // editText.visibility = View.INVISIBLE
         CButton.setOnClickListener(View.OnClickListener {
             if (checkPersmission()) takePicture() else requestPermission()
 
@@ -95,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     private fun createFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = this!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir: File? = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
@@ -105,35 +108,6 @@ class MainActivity : AppCompatActivity() {
             mCurrentPhotoPath = absolutePath
         }
     }
-    //to set captured/selected image on imageView
-   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                CAMERA_REQUEST_CODE -> {
-
-                    val extras = data?.getExtras()
-                    imageBitmap = extras?.get("data") as Bitmap
-                    imageview1.setImageBitmap(imageBitmap)
-
-
-                }
-            }
-            if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-                val imageBitmap = data?.extras?.get("data") as Bitmap
-                imageview1.setImageBitmap(imageBitmap)
-            }
-
-            if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-                imageview1.setImageURI(data?.data) // handle chosen image
-
-                imageBitmap = (imageview1.drawable as BitmapDrawable).bitmap
-
-
-            }
-        }
-    }*/
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -142,16 +116,19 @@ class MainActivity : AppCompatActivity() {
             //To get the File for further usage
             val auxFile = File(mCurrentPhotoPath)
 
-            imageBitmap=BitmapFactory.decodeFile(mCurrentPhotoPath)
-            //val imageBitmap :Bitmap= BitmapFactory.decodeFile(mCurrentPhotoPath)
+            imageBitmap =BitmapFactory.decodeFile(mCurrentPhotoPath)
+            //imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath)
             imageview1.setImageBitmap(imageBitmap)
+            //count++
+            text_Button.isEnabled=true
 
         }
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             imageview1.setImageURI(data?.data) // handle chosen image
 
             imageBitmap = (imageview1.drawable as BitmapDrawable).bitmap
-
+          // count++
+           text_Button.isEnabled=true
 
         }
 
@@ -170,27 +147,41 @@ class MainActivity : AppCompatActivity() {
 
 
     fun DetectTextFromImage(view: View) {
-        editText.visibility = View.VISIBLE
-        var text: String = ""
-        var image: FirebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap)
-        var detector: FirebaseVisionTextDetector = FirebaseVision.getInstance()
-            .visionTextDetector
-        var result: Task<FirebaseVisionText> = detector.detectInImage(image)
-            .addOnSuccessListener(object : OnSuccessListener<FirebaseVisionText> {
-                override fun onSuccess(p0: FirebaseVisionText?) {
-                    //var boundingBox: Rect =block.boundingBox!!
-                    //var cornerPoints:Array<Point> =block.cornerPoints!!
-                    for (block: FirebaseVisionText.Block in p0!!.blocks) text += block.text
-                    editText.setText(text)
-                }
-            })
-            .addOnFailureListener(object : OnFailureListener {
-                override fun onFailure(p0: Exception) {
-                    Toast.makeText(this@MainActivity, "No Text", Toast.LENGTH_LONG).show()
-                }
-            })
+       // if (count==0) {
+        //    Toast.makeText(this, "First select an image", Toast.LENGTH_LONG).show()
+        //}
+
+
+            var image: FirebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap)
+            var detector: FirebaseVisionTextDetector = FirebaseVision.getInstance()
+                .visionTextDetector
+            var result: Task<FirebaseVisionText> = detector.detectInImage(image)
+                .addOnSuccessListener(object : OnSuccessListener<FirebaseVisionText> {
+                    override fun onSuccess(p0: FirebaseVisionText?) {
+
+                        for (block: FirebaseVisionText.Block in p0!!.blocks) text += block.text
+
+                        startAnotherActivity()
+
+
+                    }
+                })
+                .addOnFailureListener(object : OnFailureListener {
+                    override fun onFailure(p0: Exception) {
+                        Toast.makeText(this@MainActivity, "No Text", Toast.LENGTH_LONG).show()
+                    }
+                })
+        }
+
+
+    fun startAnotherActivity(){
+
+        val intent=Intent(this,TextView::class.java)
+        intent.putExtra("ExtractedText",text)
+        startActivity(intent)
     }
-}
+    }
+
 
 
 
